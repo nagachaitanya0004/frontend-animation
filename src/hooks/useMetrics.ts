@@ -27,5 +27,6 @@ export function useMetrics() {
         savings: Math.round(totalSavings),
       };
     },
+    staleTime: 5 * 60 * 1000, // Keep data fresh for 5 minutes
   });
 }
