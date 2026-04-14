@@ -1,189 +1,114 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useMetrics } from '@/hooks/useMetrics';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import React from 'react';
+import { motion, Variants } from 'framer-motion';
 
 export default function FeatureSection() {
-  const { data, isLoading, isError } = useMetrics();
-  const [stage, setStage] = useState(0); // 0: Overview, 1: Waste Detection, 2: Outcome
-
-  // Automatic progression logic for the story
-  useEffect(() => {
-    if (!isLoading && !isError && data) {
-      const timers = [
-        setTimeout(() => setStage(1), 3000), // Move to Waste Detection
-        setTimeout(() => setStage(2), 7000), // Execute Optimization
-      ];
-      return () => timers.forEach(clearTimeout);
+  const nodeVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { duration: 0.6, ease: "easeOut" }
     }
-  }, [isLoading, isError, data]);
+  };
 
-  if (isLoading) return <div className="py-32 text-center opacity-50">Fetching cloud topology...</div>;
-  if (isError) return <div className="py-32 text-center text-red-500">Failed to load platform data.</div>;
+  const dashboardVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { duration: 0.8, ease: "easeOut" }
+    }
+  };
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        staggerChildren: 0.1 
+      }
+    }
+  };
 
   const nodes = [
-    { id: 'aws', label: 'AWS', x: -140, y: -100 },
-    { id: 'azure', label: 'Azure', x: 140, y: -100 },
-    { id: 'gcp', label: 'GCP', x: -140, y: 100 },
-    { id: 'prem', label: 'On-Prem', x: 140, y: 100 },
+    { id: 'aws', label: 'AWS', pos: 'top-0 left-0 md:top-10 md:left-10' },
+    { id: 'azure', label: 'Azure', pos: 'top-0 right-0 md:top-10 md:right-10' },
+    { id: 'gcp', label: 'Google Cloud', pos: 'bottom-0 left-0 md:bottom-10 md:left-10' },
+    { id: 'prem', label: 'On-Prem', pos: 'bottom-0 right-0 md:bottom-10 md:right-10' },
   ];
 
-  const pods = [1, 2, 3, 4, 5, 6];
-
   return (
-    <section className="relative py-24 min-h-[700px] flex items-center justify-center overflow-hidden bg-[var(--bg)]">
-      {/* Background Decor */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,var(--accent)_0%,transparent_70%)] opacity-[0.03] pointer-events-none" />
+    <section className="relative py-24 px-4 min-h-[600px] flex items-center justify-center bg-[var(--bg)] overflow-hidden">
+      {/* Subtle Grid Background */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+           style={{ backgroundImage: 'radial-gradient(circle, var(--text) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
 
-      <div className="relative w-full max-w-4xl h-[500px] flex items-center justify-center">
-        
-        {/* STAGE 1 & 2: Central Dashboard & Orbiting Nodes */}
-        <AnimatePresence>
-          {stage < 2 && (
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ 
-                opacity: stage === 0 ? 1 : 0.2, 
-                scale: stage === 0 ? 1 : 0.8,
-                filter: stage === 0 ? 'blur(0px)' : 'blur(4px)'
-              }}
-              exit={{ opacity: 0 }}
-              className="absolute z-10 w-64 p-6 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-xl"
-            >
-              <h3 className="text-[10px] font-black uppercase tracking-widest mb-4 opacity-40">Global View</h3>
-              <div className="space-y-3">
-                {[
-                  { label: 'CPU', val: '64%', color: 'bg-emerald-500' },
-                  { label: 'RAM', val: '82%', color: 'bg-amber-500' },
-                  { label: 'Network', val: '24%', color: 'bg-blue-500' }
-                ].map(item => (
-                  <div key={item.label} className="space-y-1">
-                    <div className="flex justify-between text-[9px] font-bold uppercase">
-                      <span>{item.label}</span>
-                      <span>{item.val}</span>
-                    </div>
-                    <div className="h-1.5 w-full bg-[var(--card-border)] rounded-full overflow-hidden">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: item.val }}
-                        className={`h-full ${item.color}`}
-                      />
-                    </div>
-                  </div>
-                ))}
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="relative w-full max-w-4xl h-[400px]"
+      >
+        {/* Central Dashboard */}
+        <motion.div 
+          variants={dashboardVariants}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm p-8 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl shadow-2xl z-20"
+        >
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--accent)]">Unified Platform</h3>
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            {[
+              { label: 'CPU', val: '40%' },
+              { label: 'GPU', val: '15%' },
+              { label: 'RAM', val: '65%' },
+              { label: 'PV', val: '80%' },
+              { label: 'Network', val: '30%' },
+              { label: 'Cloud', val: '100%' }
+            ].map((item) => (
+              <div key={item.label} className="space-y-2">
+                <div className="flex justify-between text-[10px] font-bold uppercase opacity-40">
+                  <span>{item.label}</span>
+                  <span>{item.val}</span>
+                </div>
+                <div className="h-1 w-full bg-[var(--card-border)] rounded-full overflow-hidden">
+                  <div className="h-full bg-[var(--text)] opacity-20" style={{ width: item.val }} />
+                </div>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            ))}
+          </div>
+        </motion.div>
 
-        {/* Orbiting Cloud Nodes */}
+        {/* Orbiting Nodes */}
         {nodes.map((node) => (
           <motion.div
             key={node.id}
-            initial={{ opacity: 0, x: 0, y: 0 }}
-            animate={{ 
-              opacity: (stage === 0 || (stage === 1 && node.id === 'azure')) ? 1 : 0,
-              x: stage === 0 ? node.x : (node.id === 'azure' ? 0 : node.x * 2),
-              y: stage === 0 ? node.y : (node.id === 'azure' ? 0 : node.y * 2),
-              scale: stage === 1 && node.id === 'azure' ? 2.5 : 1,
-              zIndex: node.id === 'azure' ? 50 : 5
-            }}
-            transition={{ type: 'spring', damping: 20, stiffness: 80 }}
-            className={`absolute px-6 py-3 rounded-full border-2 font-black text-xs tracking-tighter backdrop-blur-md shadow-lg
-              ${node.id === 'azure' 
-                ? 'border-[var(--accent)] bg-[var(--card-bg)] text-[var(--accent)]' 
-                : 'border-[var(--card-border)] bg-[var(--card-bg)]/80 text-[var(--text)] opacity-40'
-              }
-            `}
+            variants={nodeVariants}
+            className={`absolute ${node.pos} p-6 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl shadow-lg z-10 min-w-[120px] flex items-center justify-center group hover:border-[var(--accent)] transition-colors duration-300`}
           >
-            {node.label}
-
-            {/* STAGE 2: Deep Dive into Azure Pods */}
-            {stage >= 1 && node.id === 'azure' && (
-              <motion.div 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
-                className="absolute inset-0 flex items-center justify-center pointer-events-none"
-              >
-                <div className="grid grid-cols-3 gap-1 scale-[0.3]">
-                  {pods.map(p => (
-                    <motion.div 
-                      key={p}
-                      initial={{ scale: 0 }}
-                      animate={{ 
-                        scale: (stage === 2 && p === 4) ? 0 : 1,
-                        backgroundColor: p === 4 ? 'var(--accent)' : 'rgba(var(--accent-rgb), 0.1)',
-                        opacity: (stage === 2 && p === 4) ? 0 : 1
-                      }}
-                      className={`w-4 h-4 rounded-sm border border-[var(--accent)]/20 ${p === 4 ? 'shadow-[0_0_10px_var(--accent)] animate-pulse' : ''}`}
-                    />
-                  ))}
-                </div>
-
-                {/* Waste Insight Popup */}
-                {stage === 1 && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20, scale: 0.5 }}
-                    animate={{ opacity: 1, y: -60, scale: 0.4 }}
-                    className="absolute whitespace-nowrap bg-[var(--text)] text-[var(--bg)] p-6 rounded-3xl shadow-2xl flex flex-col gap-2 origin-bottom"
-                  >
-                    <div className="text-[14px] font-black uppercase text-amber-400">Inefficiency Detected</div>
-                    <div className="h-px w-full bg-white/10" />
-                    <div className="flex gap-8">
-                      <div>
-                        <div className="text-[10px] opacity-50 uppercase">Allocated</div>
-                        <div className="text-xl font-black">₹{Math.round((data?.totalCost || 0) / 4)}</div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] opacity-50 uppercase">Savings</div>
-                        <div className="text-xl font-black text-emerald-400">₹{data?.savings}</div>
-                      </div>
-                    </div>
-                    <div className="text-[9px] font-bold opacity-60">POD #4: Over-provisioned resources found</div>
-                  </motion.div>
-                )}
-              </motion.div>
-            )}
+            <span className="text-[10px] font-black uppercase tracking-widest opacity-60 group-hover:opacity-100 group-hover:text-[var(--accent)] transition-all">
+              {node.label}
+            </span>
+            
+            {/* Visual connector placeholder (Conceptual) */}
+            <div className="absolute inset-0 border border-dashed border-[var(--card-border)] rounded-3xl -z-10 opacity-0 group-hover:opacity-100 scale-110 transition-all" />
           </motion.div>
         ))}
 
-        {/* STAGE 3: Action & Outcome Overlay */}
-        <AnimatePresence>
-          {stage === 2 && data && (
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="absolute inset-0 flex flex-col items-center justify-center z-[100] text-center px-6"
-            >
-              <motion.div 
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', delay: 0.5 }}
-                className="w-24 h-24 mb-8 rounded-full bg-emerald-500 flex items-center justify-center shadow-2xl shadow-emerald-500/20"
-              >
-                <svg className="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
-                </svg>
-              </motion.div>
-              <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-4">
-                Captured <span className="text-emerald-500">₹{data.savings.toLocaleString()}</span>
-              </h2>
-              <p className="text-lg font-bold opacity-40 uppercase tracking-widest max-w-sm">
-                Up to 70% saved across your optimized cloud footprint.
-              </p>
-              
-              <motion.button
-                onClick={() => setStage(0)}
-                className="mt-12 px-8 py-3 bg-[var(--text)] text-[var(--bg)] rounded-full font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform"
-              >
-                Replay Analysis
-              </motion.button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Conceptual connection lines (Decorative) */}
+        <svg className="absolute inset-0 w-full h-full -z-0 opacity-[0.05] pointer-events-none hidden md:block">
+          <line x1="15%" y1="15%" x2="50%" y2="50%" stroke="var(--text)" strokeWidth="1" strokeDasharray="4 4" />
+          <line x1="85%" y1="15%" x2="50%" y2="50%" stroke="var(--text)" strokeWidth="1" strokeDasharray="4 4" />
+          <line x1="15%" y1="85%" x2="50%" y2="50%" stroke="var(--text)" strokeWidth="1" strokeDasharray="4 4" />
+          <line x1="85%" y1="85%" x2="50%" y2="50%" stroke="var(--text)" strokeWidth="1" strokeDasharray="4 4" />
+        </svg>
 
-      </div>
+      </motion.div>
     </section>
   );
 }
