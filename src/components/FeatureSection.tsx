@@ -102,23 +102,18 @@ export default function FeatureSection() {
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="flex items-end justify-between h-32 gap-2 mb-4">
             {[
-              { label: 'CPU', val: '40%' },
-              { label: 'GPU', val: '15%' },
-              { label: 'RAM', val: '65%' },
-              { label: 'PV', val: '80%' },
-              { label: 'Network', val: '30%' },
-              { label: 'Cloud', val: '100%' }
+              { label: 'CPU', val: '40%', height: 'h-[40%]' },
+              { label: 'GPU', val: '15%', height: 'h-[15%]' },
+              { label: 'RAM', val: '65%', height: 'h-[65%]' },
+              { label: 'PV', val: '80%', height: 'h-[80%]' },
+              { label: 'Network', val: '30%', height: 'h-[30%]' },
+              { label: 'Cloud', val: '95%', height: 'h-[95%]' }
             ].map((item) => (
-              <div key={item.label} className="space-y-2">
-                <div className="flex justify-between text-[10px] font-bold uppercase opacity-40">
-                  <span>{item.label}</span>
-                  <span>{item.val}</span>
-                </div>
-                <div className="h-1 w-full bg-[var(--card-border)] rounded-full overflow-hidden">
-                  <div className="h-full bg-[var(--text)] opacity-20" style={{ width: item.val }} />
-                </div>
+              <div key={item.label} className="flex flex-col items-center flex-1 gap-2">
+                <div className={`w-full ${item.height} bg-emerald-500 rounded-t-lg transition-all duration-1000 ease-out`} />
+                <span className="text-[9px] font-bold uppercase opacity-40">{item.label}</span>
               </div>
             ))}
           </div>
