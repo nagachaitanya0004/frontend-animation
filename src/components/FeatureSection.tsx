@@ -1,12 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMetrics } from '@/hooks/useMetrics';
 import { motion, Variants, useReducedMotion } from 'framer-motion';
 
 export default function FeatureSection() {
   const { data, isLoading, isError } = useMetrics();
   const shouldReduceMotion = useReducedMotion();
+  const [showFinalValues, setShowFinalValues] = useState(false);
+
+  // Trigger the "update" effect once data is loaded and component is ready
+  useEffect(() => {
+    if (data && !isLoading) {
+      const timer = setTimeout(() => setShowFinalValues(true), 1200);
+      return () => clearTimeout(timer);
+    }
+  }, [data, isLoading]);
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -36,8 +45,8 @@ export default function FeatureSection() {
   if (isLoading) {
     return (
       <div role="status" className="text-center py-20 flex flex-col items-center gap-4">
-        <span className="text-lg font-medium">Loading metrics...</span>
-        <div className="sr-only">Please wait while we fetch the latest cloud data.</div>
+        <span className="text-lg font-medium animate-pulse">Processing insights...</span>
+        <div className="sr-only">Please wait while we analyze your cloud resources.</div>
       </div>
     );
   }
@@ -50,21 +59,32 @@ export default function FeatureSection() {
     );
   }
 
+  // Calculate simulated "initial" values (e.g., 90% of actual)
+  const initialData = {
+    totalCost: Math.round((data?.totalCost || 0) * 0.92),
+    usage: Math.round((data?.usage || 0) * 0.8),
+    savings: Math.round((data?.savings || 0) * 0.75),
+  };
+
   const metrics = [
     { 
       title: "Total Cost", 
-      value: `$${data?.totalCost.toLocaleString()}`,
-      description: "Estimated total expenditure based on current resource allocation." 
+      value: `$${(showFinalValues ? data?.totalCost : initialData.totalCost)?.toLocaleString()}`,
+      description: "Estimated total expenditure based on current resource allocation.",
+      highlight: false
     },
     { 
       title: "Usage", 
-      value: data?.usage,
-      description: "Total number of active cloud resources and services monitored." 
+      value: (showFinalValues ? data?.usage : initialData.usage),
+      description: "Total number of active cloud resources and services monitored.",
+      highlight: false
     },
     { 
       title: "Savings", 
-      value: `$${data?.savings.toLocaleString()}`,
-      description: "Potential cost reduction identified through optimization strategies." 
+      value: `$${(showFinalValues ? data?.savings : initialData.savings)?.toLocaleString()}`,
+      description: "Potential cost reduction identified through optimization strategies.",
+      highlight: true,
+      badge: "Optimized"
     }
   ];
 
@@ -96,14 +116,37 @@ export default function FeatureSection() {
               scale: 1.02,
               transition: { duration: 0.2, ease: "easeOut" }
             }}
-            className="p-[clamp(1.5rem,4vw,2.5rem)] border border-[var(--card-border)] bg-[var(--card-bg)] rounded-3xl hover:shadow-xl transition-shadow duration-300 cursor-default focus-within:ring-2 focus-within:ring-[var(--accent)] outline-none"
+            className={`
+              relative p-[clamp(1.5rem,4vw,2.5rem)] border rounded-3xl transition-all duration-300 cursor-default focus-within:ring-2 focus-within:ring-[var(--accent)] outline-none
+              ${metric.highlight 
+                ? 'border-[var(--accent)] bg-[var(--card-bg)] shadow-lg shadow-[var(--accent)]/5 scale-[1.01]' 
+                : 'border-[var(--card-border)] bg-[var(--card-bg)] opacity-90'
+              }
+            `}
             tabIndex={0}
           >
-            <h2 className="text-xs uppercase tracking-[0.2em] font-bold mb-4 text-[var(--accent)]">{metric.title}</h2>
-            <div className="text-[clamp(2rem,4vw,2.75rem)] font-extrabold mb-4 text-[var(--text)] tracking-tighter leading-none">
+            {metric.badge && (
+              <span className="absolute top-4 right-6 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full bg-[var(--accent)] text-white">
+                {metric.badge}
+              </span>
+            )}
+            
+            <h2 className={`text-xs uppercase tracking-[0.2em] font-bold mb-4 ${metric.highlight ? 'text-[var(--accent)]' : 'text-[var(--text)] opacity-40'}`}>
+              {metric.title}
+            </h2>
+            
+            <motion.div 
+              key={metric.value}
+              initial={{ opacity: 0.8, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-[clamp(2rem,4vw,2.75rem)] font-extrabold mb-4 text-[var(--text)] tracking-tighter leading-none"
+            >
               {metric.value}
-            </div>
-            <p className="text-[var(--text)] opacity-80 text-sm leading-relaxed font-medium">{metric.description}</p>
+            </motion.div>
+            
+            <p className="text-[var(--text)] opacity-60 text-sm leading-relaxed font-medium">
+              {metric.description}
+            </p>
           </motion.div>
         ))}
       </motion.div>
