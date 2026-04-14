@@ -256,31 +256,37 @@ export default function FeatureSection() {
                   initial={{ opacity: 0, x: 20, y: -20, scale: 0.95 }}
                   animate={{ opacity: 1, x: 80, y: -90, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="absolute p-7 bg-[var(--text)] text-[var(--bg)] rounded-[2.5rem] shadow-4xl z-50 min-w-[240px] pointer-events-none origin-bottom-left"
+                  className="absolute p-6 bg-[var(--text)] text-[var(--bg)] border border-white/10 rounded-3xl shadow-4xl z-50 min-w-[240px] pointer-events-none origin-bottom-left"
                 >
-                  <div className="flex flex-col gap-5">
-                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-400">Inefficiency Found</div>
-                    <div className="space-y-4">
-                      <div>
-                        <div className="text-[9px] uppercase font-black opacity-30 mb-1.5">CPU Capacity Utilization</div>
-                        <div className="text-[13px] font-black">63M <span className="opacity-30 font-bold">/</span> 700M</div>
-                        <div className="h-1.5 w-full bg-white/10 rounded-full mt-2 overflow-hidden">
-                          <div className="h-full bg-amber-500" style={{ width: '9%' }} />
-                        </div>
+                  <div className="flex flex-col gap-4">
+                    <div className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-400 mb-1">Waste Detected</div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] opacity-40 font-bold uppercase mb-0.5">CPU Usage</span>
+                        <span className="text-xs font-black">63M <span className="opacity-40 font-bold">vs Request</span> 700M</span>
                       </div>
-                      <div className="pt-3 border-t border-white/10 flex justify-between items-end">
-                        <div className="text-[9px] uppercase font-black opacity-30">Potential Savings</div>
-                        <motion.div 
+
+                      <div className="flex flex-col">
+                        <span className="text-[10px] opacity-40 font-bold uppercase mb-0.5">Memory Usage</span>
+                        <span className="text-xs font-black">557MiB <span className="opacity-40 font-bold">vs Request</span> 5GiB</span>
+                      </div>
+
+                      <div className="pt-3 mt-1 border-t border-white/10 flex justify-between items-center">
+                        <span className="text-[10px] opacity-40 font-bold uppercase">Estimated Savings</span>
+                        <motion.span 
                           key={savings}
-                          initial={{ opacity: 0.5, y: -3 }}
+                          initial={{ opacity: 0.5, y: -2 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="text-2xl font-black text-emerald-400"
+                          className="text-lg font-black text-emerald-400"
                         >
-                          ${savings}
-                        </motion.div>
+                          ${savings}/mo
+                        </motion.span>
                       </div>
                     </div>
                   </div>
+                  {/* Anchor Point */}
+                  <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-[var(--text)] rotate-45 -z-10" />
                 </motion.div>
               )}
             </AnimatePresence>
