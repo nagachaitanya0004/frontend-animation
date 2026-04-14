@@ -59,12 +59,13 @@ export default function FeatureSection() {
   ];
 
   return (
-    <section className="py-24 px-4 max-w-6xl mx-auto">
+    <section className="py-[clamp(4rem,10vh,8rem)] [padding-inline:clamp(1rem,5vw,2rem)] max-w-6xl mx-auto">
       <motion.h1 
         initial={{ opacity: 0, y: -10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="text-4xl font-bold text-center mb-16"
+        style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}
+        className="font-bold text-center mb-[clamp(2rem,8vh,4rem)] tracking-tight text-[var(--text)]"
       >
         Cloud Optimization Insights
       </motion.h1>
@@ -74,7 +75,7 @@ export default function FeatureSection() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        className="grid grid-cols-1 md:grid-cols-3 gap-[clamp(1.5rem,3vw,2.5rem)]"
       >
         {metrics.map((metric, index) => (
           <motion.div 
@@ -84,10 +85,10 @@ export default function FeatureSection() {
               scale: 1.02,
               transition: { duration: 0.2, ease: "easeOut" }
             }}
-            className="p-8 border border-[var(--card-border)] bg-[var(--card-bg)] rounded-2xl hover:shadow-xl transition-shadow duration-300 cursor-default"
+            className="p-[clamp(1.5rem,4vw,2.5rem)] border border-[var(--card-border)] bg-[var(--card-bg)] rounded-3xl hover:shadow-xl transition-shadow duration-300 cursor-default"
           >
-            <h2 className="text-sm uppercase tracking-widest font-bold mb-4 text-[var(--accent)]">{metric.title}</h2>
-            <div className="text-4xl font-extrabold mb-4 text-[var(--text)] tracking-tight">
+            <h2 className="text-xs uppercase tracking-[0.2em] font-bold mb-4 text-[var(--accent)] opacity-80">{metric.title}</h2>
+            <div className="text-[clamp(2rem,4vw,2.75rem)] font-extrabold mb-4 text-[var(--text)] tracking-tighter leading-none">
               {metric.value}
             </div>
             <p className="text-[var(--text)] opacity-60 text-sm leading-relaxed font-medium">{metric.description}</p>
