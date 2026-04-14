@@ -69,8 +69,8 @@ export default function FeatureSection() {
   const [isOptimized, setIsOptimized] = useState(false);
 
   useEffect(() => {
-    // Sequence Progression
-    const timer1 = setTimeout(() => setStage(1), 2000); 
+    // Stage 2 - Step 1: Focus on Azure cluster (1s delay)
+    const timer1 = setTimeout(() => setStage(1), 1000); 
     const timer2 = setTimeout(() => {
       if (stage === 1) setSavings(237);
     }, 3500);
