@@ -10,7 +10,6 @@ export default function FeatureSection() {
   const shouldReduceMotion = useReducedMotion();
   const [showFinalValues, setShowFinalValues] = useState(false);
 
-  // Trigger the "revealing" state once data is loaded
   useEffect(() => {
     if (data && !isLoading) {
       const timer = setTimeout(() => setShowFinalValues(true), 1200);
@@ -18,7 +17,6 @@ export default function FeatureSection() {
     }
   }, [data, isLoading]);
 
-  // Animated counters
   const animatedCost = useCountUp(data?.totalCost || 0, 1000, showFinalValues);
   const animatedUsage = useCountUp(data?.usage || 0, 1000, showFinalValues);
   const animatedSavings = useCountUp(data?.savings || 0, 1000, showFinalValues);
@@ -34,24 +32,18 @@ export default function FeatureSection() {
   };
 
   const cardVariants: Variants = {
-    hidden: { 
-      opacity: 0, 
-      y: shouldReduceMotion ? 0 : 20 
-    },
+    hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 20 },
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: {
-        duration: shouldReduceMotion ? 0.2 : 0.5,
-        ease: "easeOut",
-      },
+      transition: { duration: 0.5, ease: "easeOut" },
     },
   };
 
   if (isLoading) {
     return (
       <div role="status" className="text-center py-20 flex flex-col items-center gap-4">
-        <span className="text-lg font-medium animate-pulse">Processing insights...</span>
+        <span className="text-lg font-medium animate-pulse opacity-50">Processing insights...</span>
         <div className="sr-only">Please wait while we analyze your cloud resources.</div>
       </div>
     );
@@ -88,16 +80,22 @@ export default function FeatureSection() {
   ];
 
   return (
-    <section aria-labelledby="section-title" className="py-[clamp(4rem,10vh,8rem)] [padding-inline:clamp(1rem,5vw,2rem)] max-w-6xl mx-auto">
+    <section 
+      aria-labelledby="section-title" 
+      className="relative py-[clamp(4rem,10vh,8rem)] [padding-inline:clamp(1rem,5vw,2rem)] max-w-7xl mx-auto overflow-hidden"
+    >
+      {/* Subtle background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[var(--accent)]/[0.03] blur-[120px] rounded-full pointer-events-none" />
+
       <motion.h1 
         id="section-title"
         initial={{ opacity: 0, y: -10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}
-        className="font-bold text-center mb-[clamp(2rem,8vh,4rem)] tracking-tight text-[var(--text)]"
+        style={{ fontSize: 'clamp(2.5rem, 6vw, 3.5rem)' }}
+        className="font-extrabold text-center mb-[clamp(3rem,10vh,5rem)] tracking-tighter text-[var(--text)] leading-[1.1]"
       >
-        Cloud Optimization Insights
+        Cloud Optimization <br className="hidden md:block"/> Insights
       </motion.h1>
       
       <motion.div 
@@ -105,42 +103,44 @@ export default function FeatureSection() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-[clamp(1.5rem,3vw,2.5rem)]"
+        className="grid grid-cols-1 md:grid-cols-3 gap-[clamp(1.5rem,3vw,2.5rem)] relative z-10"
       >
         {metrics.map((metric, index) => (
           <motion.div 
             key={index} 
             variants={cardVariants}
             whileHover={shouldReduceMotion ? {} : { 
-              scale: 1.02,
+              y: -4,
+              scale: 1.01,
               transition: { duration: 0.2, ease: "easeOut" }
             }}
             className={`
-              relative p-[clamp(1.5rem,4vw,2.5rem)] border rounded-3xl transition-all duration-300 cursor-default focus-within:ring-2 focus-within:ring-[var(--accent)] outline-none
+              relative p-[clamp(2rem,4vw,3rem)] border rounded-[2.5rem] transition-all duration-300 cursor-default focus-within:ring-2 focus-within:ring-[var(--accent)] outline-none backdrop-blur-md
               ${metric.highlight 
-                ? 'border-[var(--accent)] bg-[var(--card-bg)] shadow-lg shadow-[var(--accent)]/5 scale-[1.01]' 
-                : 'border-[var(--card-border)] bg-[var(--card-bg)] opacity-90'
+                ? 'border-[var(--accent)]/30 bg-gradient-to-br from-[var(--card-bg)] to-[var(--accent)]/[0.04] shadow-2xl shadow-[var(--accent)]/5 ring-1 ring-[var(--accent)]/10' 
+                : 'border-[var(--card-border)] bg-[var(--card-bg)]/90 opacity-95'
               }
             `}
             tabIndex={0}
           >
             {metric.badge && (
-              <span className="absolute top-4 right-6 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full bg-[var(--accent)] text-white">
+              <span className="absolute top-6 right-8 text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full bg-[var(--accent)] text-white shadow-lg shadow-[var(--accent)]/20">
                 {metric.badge}
               </span>
             )}
             
-            <h2 className={`text-xs uppercase tracking-[0.2em] font-bold mb-4 ${metric.highlight ? 'text-[var(--accent)]' : 'text-[var(--text)] opacity-40'}`}>
+            <h2 className={`text-[10px] uppercase tracking-[0.3em] font-black mb-6 ${metric.highlight ? 'text-[var(--accent)]' : 'text-[var(--text)] opacity-30'}`}>
               {metric.title}
             </h2>
             
-            <motion.div 
-              className="text-[clamp(2rem,4vw,2.75rem)] font-extrabold mb-4 text-[var(--text)] tracking-tighter leading-none"
-            >
+            <div className="text-[clamp(2.5rem,5vw,3.25rem)] font-black mb-6 text-[var(--text)] tracking-tighter leading-none">
               {metric.displayValue}
-            </motion.div>
+            </div>
+
+            {/* Subtle Divider */}
+            <div className={`h-px w-12 mb-6 ${metric.highlight ? 'bg-[var(--accent)]/20' : 'bg-[var(--card-border)]'}`} />
             
-            <p className="text-[var(--text)] opacity-60 text-sm leading-relaxed font-medium">
+            <p className="text-[var(--text)] opacity-70 text-sm leading-relaxed font-medium max-w-[240px]">
               {metric.description}
             </p>
           </motion.div>

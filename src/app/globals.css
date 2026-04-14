@@ -4,16 +4,16 @@
   --bg: #ffffff;
   --text: #111827;
   --card-bg: #ffffff;
-  --card-border: #e5e7eb;
+  --card-border: #f1f5f9;
   --accent: #2563eb;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0a0a0a;
-    --text: #f9fafb;
-    --card-bg: #111827;
-    --card-border: #1f2937;
+    --bg: #09090b;
+    --text: #fafafa;
+    --card-bg: #18181b;
+    --card-border: #27272a;
     --accent: #3b82f6;
   }
 }
