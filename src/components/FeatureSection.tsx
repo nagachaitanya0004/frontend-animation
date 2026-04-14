@@ -12,9 +12,12 @@ export default function FeatureSection() {
       <h1 className="text-3xl font-bold text-center mb-12">Cloud Optimization Insights</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {cards.map((card, index) => (
-          <div key={index} className="p-6 border border-gray-200 dark:border-gray-800 rounded-xl hover:shadow-sm transition-shadow">
-            <h2 className="text-xl font-semibold mb-3">{card.title}</h2>
-            <p className="text-gray-600 dark:text-gray-400">{card.description}</p>
+          <div 
+            key={index} 
+            className="p-6 border border-[var(--card-border)] bg-[var(--card-bg)] rounded-xl hover:shadow-sm transition-shadow"
+          >
+            <h2 className="text-xl font-semibold mb-3 text-[var(--text)]">{card.title}</h2>
+            <p className="text-[var(--text)] opacity-70">{card.description}</p>
           </div>
         ))}
       </div>
