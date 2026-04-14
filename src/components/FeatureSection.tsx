@@ -213,15 +213,22 @@ export default function FeatureSection() {
                         key={i}
                         initial={{ scale: 0 }}
                         animate={{ 
-                          scale: (i === 4 && isOptimized) ? 0 : 1,
+                          scale: (i === 4 && isOptimized) ? 0 : (i === 4 ? [1, 1.15, 1] : 1),
                           opacity: (i === 4 && isOptimized) ? 0 : 1,
+                          boxShadow: (i === 4 && !isOptimized) ? [
+                            '0 0 0px rgba(16, 185, 129, 0)',
+                            '0 0 12px rgba(16, 185, 129, 0.6)',
+                            '0 0 0px rgba(16, 185, 129, 0)'
+                          ] : 'none'
                         }}
                         transition={{ 
                           delay: i === 4 && isOptimized ? 0 : 0.05 * i,
+                          scale: i === 4 ? { repeat: Infinity, duration: 2, ease: "easeInOut" } : { duration: 0.3 },
+                          boxShadow: i === 4 ? { repeat: Infinity, duration: 2, ease: "easeInOut" } : { duration: 0.3 }
                         }}
                         className={`w-3.5 h-3.5 transition-all duration-500 relative
                           ${i === 4 
-                            ? (isOptimized ? 'bg-emerald-500/10' : 'bg-amber-500/50 shadow-[0_0_8px_rgba(245,158,11,0.5)]')
+                            ? (isOptimized ? 'bg-emerald-500/10' : 'bg-emerald-500 shadow-lg')
                             : 'bg-white/40 dark:bg-white/10'
                           }
                         `}
