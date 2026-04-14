@@ -204,9 +204,9 @@ export default function FeatureSection() {
               <AnimatePresence>
                 {node.id === 'azure' && stage >= 1 && (
                   <motion.div 
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex flex-wrap items-center justify-center gap-1.5 max-w-[90px]"
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="grid grid-cols-3 gap-1.5"
                   >
                     {[0, 1, 2, 3, 4, 5].map((i) => (
                       <motion.div
@@ -216,19 +216,21 @@ export default function FeatureSection() {
                           scale: (i === 4 && isOptimized) ? 0 : 1,
                           opacity: (i === 4 && isOptimized) ? 0 : 1,
                         }}
-                        transition={{ delay: i === 4 && isOptimized ? 0 : 0.04 * i }}
-                        className={`w-3.5 h-3.5 transition-all duration-700 relative
+                        transition={{ 
+                          delay: i === 4 && isOptimized ? 0 : 0.05 * i,
+                        }}
+                        className={`w-3.5 h-3.5 transition-all duration-500 relative
                           ${i === 4 
-                            ? (isOptimized ? 'bg-emerald-500/20' : 'bg-amber-500/50 shadow-[0_0_12px_rgba(245,158,11,0.6)]')
-                            : 'bg-[var(--card-border)]/60'
+                            ? (isOptimized ? 'bg-emerald-500/10' : 'bg-amber-500/50 shadow-[0_0_8px_rgba(245,158,11,0.5)]')
+                            : 'bg-white/40 dark:bg-white/10'
                           }
                         `}
                         style={{ clipPath: hexPath }}
                       >
                         {i === 4 && isOptimized && (
                           <motion.div 
-                            initial={{ scale: 1, opacity: 0.6 }}
-                            animate={{ scale: 5, opacity: 0 }}
+                            initial={{ scale: 1, opacity: 0.5 }}
+                            animate={{ scale: 4, opacity: 0 }}
                             className="absolute inset-0 bg-emerald-500"
                             style={{ clipPath: hexPath }}
                           />
