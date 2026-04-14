@@ -80,7 +80,11 @@ export default function FeatureSection() {
           <motion.div 
             key={index} 
             variants={cardVariants}
-            className="p-8 border border-[var(--card-border)] bg-[var(--card-bg)] rounded-2xl hover:shadow-xl transition-shadow duration-300"
+            whileHover={{ 
+              scale: 1.02,
+              transition: { duration: 0.2, ease: "easeOut" }
+            }}
+            className="p-8 border border-[var(--card-border)] bg-[var(--card-bg)] rounded-2xl hover:shadow-xl transition-shadow duration-300 cursor-default"
           >
             <h2 className="text-sm uppercase tracking-widest font-bold mb-4 text-[var(--accent)]">{metric.title}</h2>
             <div className="text-4xl font-extrabold mb-4 text-[var(--text)] tracking-tight">
