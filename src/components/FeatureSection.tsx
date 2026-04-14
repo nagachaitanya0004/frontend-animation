@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useMetrics } from '@/hooks/useMetrics';
+import { useCountUp } from '@/hooks/useCountUp';
 import { motion, Variants, useReducedMotion } from 'framer-motion';
 
 export default function FeatureSection() {
@@ -9,13 +10,18 @@ export default function FeatureSection() {
   const shouldReduceMotion = useReducedMotion();
   const [showFinalValues, setShowFinalValues] = useState(false);
 
-  // Trigger the "update" effect once data is loaded and component is ready
+  // Trigger the "revealing" state once data is loaded
   useEffect(() => {
     if (data && !isLoading) {
       const timer = setTimeout(() => setShowFinalValues(true), 1200);
       return () => clearTimeout(timer);
     }
   }, [data, isLoading]);
+
+  // Animated counters
+  const animatedCost = useCountUp(data?.totalCost || 0, 1000, showFinalValues);
+  const animatedUsage = useCountUp(data?.usage || 0, 1000, showFinalValues);
+  const animatedSavings = useCountUp(data?.savings || 0, 1000, showFinalValues);
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -59,29 +65,22 @@ export default function FeatureSection() {
     );
   }
 
-  // Calculate simulated "initial" values (e.g., 90% of actual)
-  const initialData = {
-    totalCost: Math.round((data?.totalCost || 0) * 0.92),
-    usage: Math.round((data?.usage || 0) * 0.8),
-    savings: Math.round((data?.savings || 0) * 0.75),
-  };
-
   const metrics = [
     { 
       title: "Total Cost", 
-      value: `$${(showFinalValues ? data?.totalCost : initialData.totalCost)?.toLocaleString()}`,
+      displayValue: `₹${animatedCost.toLocaleString()}`,
       description: "Estimated total expenditure based on current resource allocation.",
       highlight: false
     },
     { 
       title: "Usage", 
-      value: (showFinalValues ? data?.usage : initialData.usage),
+      displayValue: `${animatedUsage}%`,
       description: "Total number of active cloud resources and services monitored.",
       highlight: false
     },
     { 
       title: "Savings", 
-      value: `$${(showFinalValues ? data?.savings : initialData.savings)?.toLocaleString()}`,
+      displayValue: `₹${animatedSavings.toLocaleString()}`,
       description: "Potential cost reduction identified through optimization strategies.",
       highlight: true,
       badge: "Optimized"
@@ -136,12 +135,9 @@ export default function FeatureSection() {
             </h2>
             
             <motion.div 
-              key={metric.value}
-              initial={{ opacity: 0.8, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
               className="text-[clamp(2rem,4vw,2.75rem)] font-extrabold mb-4 text-[var(--text)] tracking-tighter leading-none"
             >
-              {metric.value}
+              {metric.displayValue}
             </motion.div>
             
             <p className="text-[var(--text)] opacity-60 text-sm leading-relaxed font-medium">
