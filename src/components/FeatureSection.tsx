@@ -286,12 +286,17 @@ export default function FeatureSection() {
           )}
         </AnimatePresence>
 
-        <svg className="absolute inset-0 w-full h-full -z-0 opacity-[0.03] pointer-events-none hidden md:block transition-opacity duration-1000"
-             style={{ opacity: stage === 0 ? 0.03 : 0.01 }}>
-          <line x1="15%" y1="15%" x2="50%" y2="50%" stroke="var(--text)" strokeWidth="1" strokeDasharray="4 4" />
-          <line x1="85%" y1="15%" x2="50%" y2="50%" stroke="var(--text)" strokeWidth="1" strokeDasharray="4 4" />
-          <line x1="15%" y1="85%" x2="50%" y2="50%" stroke="var(--text)" strokeWidth="1" strokeDasharray="4 4" />
-          <line x1="85%" y1="85%" x2="50%" y2="50%" stroke="var(--text)" strokeWidth="1" strokeDasharray="4 4" />
+        {/* Connection Lines (Data Flow) */}
+        <svg className="absolute inset-x-0 top-1/2 -translate-y-1/2 w-full h-full -z-10 pointer-events-none opacity-40 transition-opacity duration-1000"
+             style={{ opacity: stage === 0 ? 0.3 : 0.05 }}>
+          {/* AWS -> Center */}
+          <line x1="80" y1="60" x2="45%" y2="50%" stroke="var(--accent)" strokeWidth="1.5" strokeDasharray="4 6" className="opacity-30" />
+          {/* Azure -> Center */}
+          <line x1="calc(100% - 80px)" y1="60" x2="55%" y2="50%" stroke="var(--accent)" strokeWidth="1.5" strokeDasharray="4 6" className="opacity-30" />
+          {/* GCP -> Center */}
+          <line x1="80" y1="calc(100% - 60px)" x2="45%" y2="50%" stroke="var(--accent)" strokeWidth="1.5" strokeDasharray="4 6" className="opacity-30" />
+          {/* Prem -> Center */}
+          <line x1="calc(100% - 80px)" y1="calc(100% - 60px)" x2="55%" y2="50%" stroke="var(--accent)" strokeWidth="1.5" strokeDasharray="4 6" className="opacity-30" />
         </svg>
       </motion.div>
     </section>
